@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 	argb : list[bool] = [ False for _ in  range(0, 5) ]
 	args : tuple[str] = (
-		'Gamemory v1.2',
+		'Gamemory v1.2.1',
 		'by A. S. Zaykov',
 		'suck my dick'
 	)
@@ -148,10 +148,10 @@ if __name__ == '__main__':
 						elif isclearmap(0, y, x + 1, len(xp)): x -= 1
 					y -= 1
 				else:
-					y = len(yp) - 1
 					if map[yp[y].index][xp[x].index] == 0:
 						if isclearmap(y, len(yp), 0, x): x += 1
 						elif isclearmap(y, len(yp), x + 1, len(xp)): x -= 1
+					y = len(yp) - 1
 			case 1:
 				if y < (len(yp) - 1):
 					if len(xp) > 1 and isclearmap(y + 1, len(yp), x, x + 1):
@@ -159,10 +159,10 @@ if __name__ == '__main__':
 						elif isclearmap(y + 1, len(yp), x + 1, len(xp)): x -= 1
 					y += 1
 				else:
-					y = 0
 					if map[yp[y].index][xp[x].index] == 0:
 						if isclearmap(0, 1, 0, x): x += 1
 						elif isclearmap(0, 1, x + 1, len(xp)): x -= 1
+					y = 0
 			case 2:
 				if x > 0:
 					if len(yp) > 1 and isclearmap(y, y + 1, 0, x):
@@ -170,10 +170,10 @@ if __name__ == '__main__':
 						elif isclearmap(y + 1, len(yp), 0, x): y -= 1
 					x -= 1
 				else:
-					x = len(xp) - 1
 					if map[yp[y].index][xp[x].index] == 0:
 						if isclearmap(0, y, x, len(xp)): y += 1
 						elif isclearmap(y + 1, len(yp), x, len(xp)): y -= 1
+					x = len(xp) - 1
 			case 3:
 				if x < (len(xp) - 1):
 					if len(yp) > 1 and isclearmap(y, y + 1, x + 1, len(xp)):
@@ -181,10 +181,10 @@ if __name__ == '__main__':
 						elif isclearmap(y + 1, len(yp), x + 1, len(xp)): y -= 1
 					x += 1
 				else:
-					x = 0
 					if map[yp[y].index][xp[x].index] == 0:
 						if isclearmap(0, y, 0, 1): y += 1
 						elif isclearmap(y + 1, len(yp), 0, 1): y -= 1
+					x = 0
 		outmove()
 
 	def keyenter() -> None:
