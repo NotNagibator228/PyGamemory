@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
 	argb : list[bool] = [ False for _ in  range(0, 5) ]
 	args : tuple[str] = (
-		'Gamemory v1.2.1',
+		'Gamemory v1.4',
 		'by A. S. Zaykov',
 		'suck my dick'
 	)
@@ -38,12 +38,12 @@ if __name__ == '__main__':
 	xbmp : int = lambda x: (x * (size[3] + 1)) + 1
 	xemp : int = lambda x: (x * (size[3] + 1)) + size[3] + 2
 
-	def error_args(string : str, exit_code : int) -> None:
+	def error_args(string : str, exit_code : int):
 		print ('Error ' + string)
 		print (args[2])
 		exit (exit_code)
 
-	def generate() -> None:
+	def generate():
 		global map, yt, xt, yp, xp, y, x, win, game, cheat
 		map = [ [ 0 for _ in range(0, size[1]) ] for _ in range(0, size[0]) ]
 		yt = [ 0 for _ in range(0, size[2]) ]
@@ -72,14 +72,14 @@ if __name__ == '__main__':
 		game = True; cheat = False
 		win = 0
 
-	def getmapsize() -> None:
+	def getmapsize():
 		global size, leny, lenx, stdscry, stdscrx
 		size[3] = lennum(size[2])
 		leny = size[0] + 2
 		lenx = (size[1] * (size[3] + 1)) + 3
 		stdscry, stdscrx = stdscr.getmaxyx()
 
-	def initmap() -> None:
+	def initmap():
 		global window
 		window = curses.newwin(size[0] + 2, (size[1] * (size[3] + 1)) + 3 , int(stdscry - leny) // 2,  int(stdscrx - lenx) // 2)
 		window.border()
@@ -102,7 +102,7 @@ if __name__ == '__main__':
 			else: return index
 		return -1
 
-	def outnumbers() -> None:
+	def outnumbers():
 		global window
 		for indexy in range(0, size[0]):
 			for indexx in range(0, size[1]):
@@ -110,7 +110,7 @@ if __name__ == '__main__':
 					window.addstr(ypoz(indexy), xpoz(indexx), str(map[indexy][indexx]) + ' ' * (size[3] - lennum(map[indexy][indexx])))
 		window.refresh()
 
-	def hidenumbers() -> None:
+	def hidenumbers():
 		global window
 		for indexy in range(0, size[0]):
 			for indexx in range(0, size[1]):
@@ -118,13 +118,13 @@ if __name__ == '__main__':
 					window.addstr(ypoz(indexy), xpoz(indexx), '#' * size[3])
 		window.refresh()
 
-	def outmove() -> None:
+	def outmove():
 		global window
 		window.addstr(ypoz(yp[y].index), xbmp(xp[x].index), '>')
 		window.addstr(ypoz(yp[y].index), xemp(xp[x].index), '<')
 		window.refresh()
 
-	def hidemove() -> None:
+	def hidemove():
 		global window
 		window.addstr(ypoz(yp[y].index), xbmp(xp[x].index), ' ')
 		window.addstr(ypoz(yp[y].index), xemp(xp[x].index), ' ')
@@ -136,58 +136,66 @@ if __name__ == '__main__':
 				if map[yp[indexy].index][xp[indexx].index] != 0: return False
 		return True
 
-	def move(key : int) -> None:
+	def move(key : int):
 		global window, x, y
 		hidemove()
 
 		match key:
-			case 0:
+			case 0: #up
 				if y > 0:
 					if len(xp) > 1 and isclearmap(0, y, x, x + 1):
-						if isclearmap(0, y, 0, x): x += 1
+						if x == 0: x += 1
+						elif x == len(xp) - 1: x -= 1
+						elif isclearmap(0, y, 0, x): x += 1
 						elif isclearmap(0, y, x + 1, len(xp)): x -= 1
 					y -= 1
 				else:
-					if map[yp[y].index][xp[x].index] == 0:
-						if isclearmap(y, len(yp), 0, x): x += 1
-						elif isclearmap(y, len(yp), x + 1, len(xp)): x -= 1
 					y = len(yp) - 1
-			case 1:
-				if y < (len(yp) - 1):
-					if len(xp) > 1 and isclearmap(y + 1, len(yp), x, x + 1):
-						if isclearmap(y + 1, len(yp), 0, x): x += 1
-						elif isclearmap(y + 1, len(yp), x + 1, len(xp)): x -= 1
+					if len(xp) > 1 and map[yp[y].index][xp[x].index] == 0:
+						if isclearmap(0, y, 0, x): x += 1
+						elif isclearmap(0, y, x + 1, len(xp)): x -= 1
+			case 1:	#down
+				if y < len(yp) - 1:
 					y += 1
+					if len(xp) > 1 and isclearmap(y, len(yp), x, x + 1):
+						if x == 0: x += 1
+						elif x == len(xp) - 1: x -= 1
+						elif isclearmap(y, len(yp), 0, x): x += 1
+						elif isclearmap(y, len(yp), x + 1, len(xp)): x -= 1
 				else:
-					if map[yp[y].index][xp[x].index] == 0:
-						if isclearmap(0, 1, 0, x): x += 1
-						elif isclearmap(0, 1, x + 1, len(xp)): x -= 1
 					y = 0
-			case 2:
+					if len(xp) > 1 and map[yp[y].index][xp[x].index] == 0:
+						if isclermap(0, y, 0, x): x += 1
+						elif isclearmap(0, y, x + 1, len(xp)): x -= 1
+			case 2: #left
 				if x > 0:
 					if len(yp) > 1 and isclearmap(y, y + 1, 0, x):
-						if isclearmap(0, y, 0, x): y += 1
+						if y == 0: y += 1
+						elif y == len(yp) - 1: y -= 1
+						elif isclearmap(0, y, 0, x): y += 1
 						elif isclearmap(y + 1, len(yp), 0, x): y -= 1
 					x -= 1
 				else:
-					if map[yp[y].index][xp[x].index] == 0:
-						if isclearmap(0, y, x, len(xp)): y += 1
-						elif isclearmap(y + 1, len(yp), x, len(xp)): y -= 1
 					x = len(xp) - 1
-			case 3:
-				if x < (len(xp) - 1):
-					if len(yp) > 1 and isclearmap(y, y + 1, x + 1, len(xp)):
-						if isclearmap(0, y, x + 1, len(xp)): y += 1
-						elif isclearmap(y + 1, len(yp), x + 1, len(xp)): y -= 1
+					if len(yp) > 1 and map[yp[y].index][xp[x].index] == 0:
+						if isclearmap(0, y, 0, len(xp)): y += 1
+						elif isclearmap(y + 1, len(yp), 0, len(xp)): y -= 1
+			case 3:	#right
+				if x < len(xp) - 1:
 					x += 1
+					if len(yp) > 1 and isclearmap(y, y + 1, x, len(xp)):
+						if y == 0: y += 1
+						elif y == len(yp) - 1: y -= 1
+						elif isclearmap(0, y, x, len(xp)): y += 1
+						elif isclearmap(y + 1, len(yp), x, len(xp)): y -= 1
 				else:
-					if map[yp[y].index][xp[x].index] == 0:
-						if isclearmap(0, y, 0, 1): y += 1
-						elif isclearmap(y + 1, len(yp), 0, 1): y -= 1
 					x = 0
+					if len(yp) > 1 and map[yp[y].index][xp[x].index] == 0:
+						if isclearmap(0, y, 0, len(xp)): y += 1
+						elif isclearmap(y + 1, len(yp), 0, len(xp)): y -= 1
 		outmove()
 
-	def keyenter() -> None:
+	def keyenter():
 		global xp, yp, y, x, win, window, map, game, cheat
 		hidemove()
 		if map[yp[y].index][xp[x].index] != 0:
@@ -215,20 +223,20 @@ if __name__ == '__main__':
 				return
 		outmove(); window.refresh()
 
-	def gotoelement() -> None:
+	def gotoelement():
 		hidemove()
 		global y, x
 		y = binarysearch(yp, yt[win])
 		x = binarysearch(xp, xt[win])
 		outmove()
 
-	def mapcheat() -> None:
+	def mapcheat():
 		global cheat
 		if win != 0:
 			if cheat: cheat = False; hidenumbers()
 			else: cheat = True; outnumbers()
 
-	def main() -> None:
+	def main():
 		global stdscr, argb, window
 		index = 1
 
