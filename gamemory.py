@@ -165,7 +165,7 @@ if __name__ == '__main__':
 				else:
 					y = 0
 					if len(xp) > 1 and map[yp[y].index][xp[x].index] == 0:
-						if isclermap(0, y, 0, x): x += 1
+						if isclearmap(0, y, 0, x): x += 1
 						elif isclearmap(0, y, x + 1, len(xp)): x -= 1
 			case 2: #left
 				if x > 0:
